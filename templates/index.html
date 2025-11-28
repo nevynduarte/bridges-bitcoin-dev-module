@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+      Main HTML shell for the BTC price widget.
+
+      We keep this extremely lightweight. All dynamic behavior is handled
+      by static/main.js, which calls the Flask JSON API.
+    -->
+    <meta charset="UTF-8" />
+    <title>Live BTC Price | Bridges AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <main class="page">
+        <section class="card">
+            <h1 class="title">Bitcoin (BTC) Price</h1>
+
+            <!-- Current price display -->
+            <div id="price" class="price">
+                Loading...
+            </div>
+
+            <!-- Last updated timestamp -->
+            <div id="updated" class="updated">
+                Last updated: —
+            </div>
+
+            <!-- Error message area (hidden by default) -->
+            <div id="error" class="error hidden"></div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
