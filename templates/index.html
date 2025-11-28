@@ -2,34 +2,53 @@
 <html lang="en">
 <head>
     <!--
-      Main HTML shell for the BTC price widget.
-
-      We keep this extremely lightweight. All dynamic behavior is handled
-      by static/main.js, which calls the Flask JSON API.
+      BTC Price Widget - Bridges AI
+      Clean, focused layout with a dashboard-style card.
     -->
     <meta charset="UTF-8" />
     <title>Live BTC Price | Bridges AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <main class="page">
-        <section class="card">
-            <h1 class="title">Bitcoin (BTC) Price</h1>
-
-            <!-- Current price display -->
-            <div id="price" class="price">
-                Loading...
+    <div class="app-shell">
+        <header class="app-header">
+            <div class="logo-mark">B</div>
+            <div class="app-title-group">
+                <div class="app-title">Bridges AI · Crypto Snapshot</div>
+                <div class="app-subtitle">Live BTC/USD price, refreshed every 60 seconds</div>
             </div>
+        </header>
 
-            <!-- Last updated timestamp -->
-            <div id="updated" class="updated">
-                Last updated: —
-            </div>
+        <main class="page">
+            <section class="card">
+                <div class="card-header">
+                    <div class="badge">BTC / USD</div>
+                    <div class="status">
+                        <span class="status-dot status-dot-live" id="status-dot"></span>
+                        <span class="status-text" id="status-text">Live</span>
+                    </div>
+                </div>
 
-            <!-- Error message area (hidden by default) -->
-            <div id="error" class="error hidden"></div>
-        </section>
-    </main>
+                <h1 class="title">Bitcoin Price</h1>
+
+                <div class="price-row">
+                    <span id="price" class="price">Loading...</span>
+                </div>
+
+                <div class="meta-row">
+                    <span id="updated" class="updated">Last updated: —</span>
+                    <span id="source" class="source">Source: —</span>
+                </div>
+
+                <div id="error" class="error hidden"></div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            Built for Bridges AI · Demo module
+        </footer>
+    </div>
 
     <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>

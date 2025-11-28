@@ -3,16 +3,18 @@
  *
  * Responsibilities:
  * - Fetch BTC/USD price from /api/prices/btc-usd
- * - Update the DOM with the latest price and timestamps
- * - Show a user-friendly error message if something goes wrong
- * - Automatically refresh the data every 60 seconds
+ * - Update price, last-updated time, and source
+ * - Show "Live" vs error status pill
+ * - Animate price changes up/down for a quick visual cue
  */
 
-const REFRESH_INTERVAL_MS = 60_000; // 60 seconds
+const REFRESH_INTERVAL_MS = 60000; // 60 seconds
+let lastPrice = null;
+
+console.log("[BTC] main.js loaded");
 
 /**
- * Format a number as a USD currency string.
- * Example: 67321.123 => "$67,321.12"
+ * Format a number as USD.
  */
 function formatUsd(value) {
   try {
@@ -23,68 +25,136 @@ function formatUsd(value) {
       maximumFractionDigits: 2,
     }).format(value);
   } catch (e) {
-    // Fallback in case of unexpected input.
-    return `$${value}`;
+    console.warn("[BTC] formatUsd fallback", e);
+    return "$" + value;
   }
 }
 
 /**
- * Fetch the BTC price from the backend and update the DOM.
+ * Update status pill visuals (Live vs Error).
+ */
+function setStatus(isError) {
+  const statusDot = document.getElementById("status-dot");
+  const statusText = document.getElementById("status-text");
+
+  if (!statusDot || !statusText) return;
+
+  if (isError) {
+    statusDot.classList.remove("status-dot-live");
+    statusDot.classList.add("status-dot-error");
+    statusText.textContent = "Degraded";
+  } else {
+    statusDot.classList.remove("status-dot-error");
+    statusDot.classList.add("status-dot-live");
+    statusText.textContent = "Live";
+  }
+}
+
+/**
+ * Apply a transient animation class based on price movement.
+ */
+function animatePriceChange(priceEl, newPrice) {
+  if (lastPrice === null) {
+    lastPrice = newPrice;
+    return;
+  }
+
+  const goingUp = newPrice > lastPrice;
+  const goingDown = newPrice < lastPrice;
+
+  priceEl.classList.remove("price-up", "price-down");
+
+  if (goingUp) {
+    priceEl.classList.add("price-up");
+  } else if (goingDown) {
+    priceEl.classList.add("price-down");
+  }
+
+  lastPrice = newPrice;
+
+  // Remove animation class after it finishes so it can retrigger later.
+  setTimeout(() => {
+    priceEl.classList.remove("price-up", "price-down");
+  }, 700);
+}
+
+/**
+ * Fetch the BTC price from the backend and update the UI.
  */
 async function fetchAndRenderPrice() {
   const priceEl = document.getElementById("price");
   const updatedEl = document.getElementById("updated");
+  const sourceEl = document.getElementById("source");
   const errorEl = document.getElementById("error");
 
-  // Clear any previous error state.
+  if (!priceEl || !updatedEl || !sourceEl || !errorEl) {
+    console.error("[BTC] Missing DOM elements for rendering.");
+    return;
+  }
+
+  console.log("[BTC] fetchAndRenderPrice() called");
+
+  // Clear previous error state.
   errorEl.textContent = "";
   errorEl.classList.add("hidden");
 
   try {
     const response = await fetch("/api/prices/btc-usd", {
       method: "GET",
-      headers: {
-        "Accept": "application/json",
-      },
+      headers: { Accept: "application/json" },
     });
 
+    console.log("[BTC] backend status:", response.status);
+
     if (!response.ok) {
-      // Example: 502 or 500 from backend.
       throw new Error(`Backend responded with status ${response.status}`);
     }
 
     const data = await response.json();
+    console.log("[BTC] data:", data);
 
     if (data.error) {
-      // Backend may include a structured error payload.
       throw new Error(data.error);
     }
 
-    // Update price text.
-    priceEl.textContent = formatUsd(data.price);
+    // Render price with animation if it changed.
+    const newPrice = Number(data.price);
+    priceEl.textContent = formatUsd(newPrice);
+    animatePriceChange(priceEl, newPrice);
 
-    // Prefer server_last_updated for user-facing display.
-    const updatedText = data.server_last_updated || "Unknown";
-    updatedEl.textContent = `Last updated: ${new Date(updatedText).toLocaleTimeString()}`;
+    // Last updated.
+    const updatedText = data.server_last_updated || new Date().toISOString();
+    updatedEl.textContent =
+      "Last updated: " + new Date(updatedText).toLocaleTimeString();
+
+    // Source text.
+    const sourceName = data.source || "Unknown source";
+    sourceEl.textContent = "Source: " + sourceName;
+
+    // Status → Live.
+    setStatus(false);
   } catch (err) {
-    console.error("Error fetching BTC price:", err);
+    console.error("[BTC] Error fetching BTC price:", err);
 
-    // Show a user-friendly error while keeping the last price on-screen.
     errorEl.textContent =
       "⚠️ Unable to fetch live price right now. Retrying automatically...";
     errorEl.classList.remove("hidden");
+
+    // Status → Degraded / Error.
+    setStatus(true);
   }
 }
 
 /**
- * Initialize the page:
+ * Initialize:
  * - Fetch once immediately
- * - Then schedule periodic refreshes
+ * - Then refresh at a fixed interval
  */
 function init() {
+  console.log("[BTC] init() called");
   fetchAndRenderPrice();
   setInterval(fetchAndRenderPrice, REFRESH_INTERVAL_MS);
 }
 
-// Run once the DOM is ready.
-document.addEventListener("DOMContentLoaded", init);
+// Run on load (script is at the bottom of <body>, so DOM is ready).
+init();
