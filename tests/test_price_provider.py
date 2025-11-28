@@ -36,7 +36,11 @@ def test_provider_smoke(monkeypatch):
 
     monkeypatch.setattr(pp.requests, "get", fake_get)
 
-    provider = CoingeckoPriceProvider(base_url="https://dummy-url.example")
+    provider = CoingeckoPriceProvider(
+        base_url="https://dummy-url.example",
+        retry_attempts=1,
+        retry_backoff_seconds=0,
+    )
     result = provider.get_btc_usd_price()
 
     assert result["price"] == sample_json["bitcoin"]["usd"]
@@ -60,7 +64,11 @@ def test_provider_bad_status(monkeypatch):
 
     monkeypatch.setattr(pp.requests, "get", fake_get)
 
-    provider = CoingeckoPriceProvider(base_url="https://dummy-url.example")
+    provider = CoingeckoPriceProvider(
+        base_url="https://dummy-url.example",
+        retry_attempts=1,
+        retry_backoff_seconds=0,
+    )
 
     try:
         provider.get_btc_usd_price()

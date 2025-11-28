@@ -1,0 +1,291 @@
+/*
+  Bridges BTC Price Widget - Styling
+
+  Goals:
+  - Modern, minimal dashboard look
+  - Centered card with soft shadows and rounded corners
+  - Clear hierarchy: title > price > meta > error
+*/
+
+:root {
+  --bg: #050816;
+  --bg-gradient-start: #050816;
+  --bg-gradient-end: #111827;
+  --card-bg: #0b1120;
+  --card-border: rgba(148, 163, 184, 0.2);
+  --text-main: #e5e7eb;
+  --text-muted: #9ca3af;
+  --accent: #38bdf8;
+  --accent-soft: rgba(56, 189, 248, 0.15);
+  --error: #f97373;
+  --success: #22c55e;
+  --warning: #facc15;
+
+  --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.75);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", sans-serif;
+  color: var(--text-main);
+  background: radial-gradient(circle at top, var(--bg-gradient-end), var(--bg));
+}
+
+/* Layout shell */
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #38bdf8, #a855f7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 1rem;
+  box-shadow: 0 10px 30px rgba(56, 189, 248, 0.35);
+}
+
+.app-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #cbd5f5;
+}
+
+.app-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Centered main content */
+
+.page {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+/* Card */
+
+.card {
+  background-color: var(--card-bg);
+  border-radius: 18px;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-soft);
+  padding: 20px 24px 22px;
+  max-width: 420px;
+  width: 100%;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+}
+
+/* Status pill */
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background-color: var(--success);
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18);
+}
+
+.status-dot-live {
+  background-color: var(--success);
+}
+
+.status-dot-error {
+  background-color: var(--error);
+  box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.18);
+}
+
+.status-text {
+  opacity: 0.9;
+}
+
+/* Title + price */
+
+.title {
+  margin: 0;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin: 4px 0 6px;
+}
+
+.price {
+  font-size: 2.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  text-shadow: 0 0 24px rgba(56, 189, 248, 0.4);
+}
+
+/* Price change animations */
+
+.price-up {
+  animation: priceUp 600ms ease-out;
+}
+
+.price-down {
+  animation: priceDown 600ms ease-out;
+}
+
+@keyframes priceUp {
+  0% {
+    color: #4ade80;
+    text-shadow: 0 0 24px rgba(74, 222, 128, 0.5);
+  }
+  100% {
+    color: var(--accent);
+    text-shadow: 0 0 24px rgba(56, 189, 248, 0.4);
+  }
+}
+
+@keyframes priceDown {
+  0% {
+    color: #f97373;
+    text-shadow: 0 0 24px rgba(248, 113, 113, 0.5);
+  }
+  100% {
+    color: var(--accent);
+    text-shadow: 0 0 24px rgba(56, 189, 248, 0.4);
+  }
+}
+
+/* Meta row */
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 8px;
+  gap: 8px;
+  font-size: 0.78rem;
+}
+
+.updated {
+  color: var(--text-muted);
+}
+
+.source {
+  color: var(--text-muted);
+  text-align: right;
+}
+
+/* Error text */
+
+.error {
+  margin-top: 12px;
+  font-size: 0.78rem;
+  color: var(--error);
+  background: rgba(248, 113, 113, 0.08);
+  border-radius: 10px;
+  padding: 6px 8px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Footer */
+
+.app-footer {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-align: center;
+  padding: 10px 16px 14px;
+}
+
+/* Responsive tweaks */
+
+@media (max-width: 480px) {
+  .card {
+    padding: 18px 16px 20px;
+  }
+
+  .price {
+    font-size: 2.2rem;
+  }
+
+  .meta-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .source {
+    text-align: left;
+  }
+}

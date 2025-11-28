@@ -31,4 +31,4 @@ class Config:
     # TTL for our in-memory cache (seconds).
     # If many users request the price frequently, this prevents excessive
     # calls to the upstream API.
-    CACHE_TTL_SECONDS = 30
+    CACHE_TTL_SECONDS = int(os.getenv("CACHE_TTL_SECONDS", "120"))

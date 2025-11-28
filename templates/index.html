@@ -7,7 +7,17 @@
     -->
     <meta charset="UTF-8" />
     <title>Live BTC Price | Bridges AI</title>
+    <meta
+      name="description"
+      content="Live BTC/USD price powered by Coingecko, refreshed every 60 seconds."
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b1120" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='favicon.ico') }}"
+      type="image/x-icon"
+    />
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
@@ -46,7 +56,7 @@
         </main>
 
         <footer class="app-footer">
-            Built for Bridges AI · Demo module
+            Source: <span id="footer-source">—</span> · Built for Bridges AI · Demo module
         </footer>
     </div>
 
