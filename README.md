@@ -6,14 +6,14 @@ A minimal, production-minded web app that displays the **live Bitcoin (BTC) pric
 
 ## Features
 
-* ✨ Real-time BTC/USD price from Coingecko API
-* ⌛ Auto-refresh every 60 seconds with retry/backoff
-* 🔔 "Live" / "Offline" status pill with animation
-* ⏱ Timestamp of last update (or age of stale cache)
-* ⚖ Graceful fallback: stale cached values if API fails
-* ⚙ Configurable via environment: timeouts, cache TTL
-* 📈 Modern, responsive dark-themed UI
-* ✅ Structured logs + test coverage + GitHub CI
+* Real-time BTC/USD price from Coingecko API
+* Auto-refresh every 60 seconds with retry/backoff
+* "Live" / "Offline" status pill with animation
+* Timestamp of last update (or age of stale cache)
+* Graceful fallback: stale cached values if API fails
+* Configurable via environment: timeouts, cache TTL
+* Modern, responsive dark-themed UI
+* Structured logs + test coverage + GitHub CI
 
 ---
 
